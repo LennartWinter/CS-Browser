@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cs Browser", "Cs Browser\Cs Browser.csproj", "{EDAD1D78-8811-40F1-BEA7-A18CADBC3573}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EDAD1D78-8811-40F1-BEA7-A18CADBC3573}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDAD1D78-8811-40F1-BEA7-A18CADBC3573}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDAD1D78-8811-40F1-BEA7-A18CADBC3573}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDAD1D78-8811-40F1-BEA7-A18CADBC3573}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
