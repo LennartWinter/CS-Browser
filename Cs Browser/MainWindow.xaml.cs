@@ -61,7 +61,7 @@ namespace Cs_Browser
             var closeButton = new Button
             {
                 Content = "x",
-                Tag = tabCounter - 1,
+                Tag = tabCounter,
                 Background = Brushes.Transparent,
                 BorderBrush = Brushes.Transparent,
                 HorizontalAlignment = HorizontalAlignment.Right,
@@ -90,53 +90,44 @@ namespace Cs_Browser
 
             if (closeButton != null)
             {
-                int tabIndex = (int)closeButton.Tag + 1;
+                int tabIndex = (int)closeButton.Tag;
 
                 if (tabIndex >= 0 && tabIndex < tabControl.Items.Count)
                 {
                     var tabItem = tabControl.Items[tabIndex] as TabItem;
 
-                    if (tabItem != null)
+                    tabControl.Items.RemoveAt(tabIndex);
+
+                    var webBrowser = (tabItem.Content as Grid)?.Children.OfType<ChromiumWebBrowser>().FirstOrDefault();
+                    webBrowser?.Dispose();
+
+                    tabCounter--;
+
+                    if (tabCounter <= 0)
                     {
-                        var grid = tabItem.Content as Grid;
+                        tabCounter = 1;
+                    }
 
-                        if (grid != null)
+                    for (int i = tabIndex; i < tabControl.Items.Count; i++)
+                    {
+                        var remainingTab = tabControl.Items[i] as TabItem;
+                        if (remainingTab != null)
                         {
-                            var webBrowser = grid.Children.OfType<ChromiumWebBrowser>().FirstOrDefault();
+                            var grid = remainingTab.Content as Grid;
+                            var remainingButton = grid.Children.OfType<Button>().FirstOrDefault();
 
-                            if (webBrowser != null)
+                            if (remainingButton != null)
                             {
-                                // Dispose of the ChromiumWebBrowser on the UI thread
-                                this.Dispatcher.Invoke(() => webBrowser.Dispose());
+                                remainingButton.Tag = i;
+                                remainingTab.Header = i == 0 ? "Adam" : $"Tab {i + 1}";
                             }
-                            else
-                            {
-                                Console.WriteLine("ChromiumWebBrowser not found in the grid.");
-                            }
-
-                            // Remove the tab from the tabControl
-                            tabControl.Items.Remove(tabItem);
-                        }
-                        else
-                        {
-                            Console.WriteLine("Grid not found in the tab item.");
                         }
                     }
-                    else
-                    {
-                        Console.WriteLine("TabItem not found in the tabControl.");
-                    }
                 }
-                else
-                {
-                    Console.WriteLine("Invalid tab index.");
-                }
-            }
-            else
-            {
-                Console.WriteLine("Invalid close button.");
             }
         }
+
+
 
         private ChromiumWebBrowser GetCurrentWebView()
         {
