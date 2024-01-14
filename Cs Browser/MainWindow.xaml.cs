@@ -100,14 +100,7 @@ namespace Cs_Browser
 
                     var webBrowser = (tabItem.Content as Grid)?.Children.OfType<ChromiumWebBrowser>().FirstOrDefault();
                     webBrowser?.Dispose();
-
                     tabCounter--;
-
-                    if (tabCounter <= 0)
-                    {
-                        tabCounter = 1;
-                    }
-
                     for (int i = tabIndex; i < tabControl.Items.Count; i++)
                     {
                         var remainingTab = tabControl.Items[i] as TabItem;
@@ -119,7 +112,7 @@ namespace Cs_Browser
                             if (remainingButton != null)
                             {
                                 remainingButton.Tag = i;
-                                remainingTab.Header = i == 0 ? "Adam" : $"Tab {i + 1}";
+                                remainingTab.Header = i == 0 ? "Adam" : $"Tab {i}";
                             }
                         }
                     }
