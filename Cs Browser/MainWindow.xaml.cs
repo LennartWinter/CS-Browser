@@ -14,12 +14,85 @@ namespace Cs_Browser
     {
         private int tabCounter = 1;
 
+        private void MainWindow_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.T && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                AddTabButton_Click(sender, e);
+                e.Handled = true;
+            }
+            else if (e.Key == Key.W && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                CloseCurrentTab();
+                e.Handled = true;
+            }
+            else if (e.Key == Key.Tab && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                SwitchToNextTab();
+                e.Handled = true;
+            }
+        }
+
+        private void SwitchToNextTab()
+        {
+            int selectedIndex = tabControl.SelectedIndex;
+
+            if (Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                int nextIndex = (selectedIndex + 1) % tabControl.Items.Count;
+                tabControl.SelectedIndex = nextIndex;
+            }
+        }
+
+
+
+        private void CloseCurrentTab()
+        {
+            var currentTab = tabControl.SelectedItem as TabItem;
+
+            if (currentTab != null)
+            {
+                var grid = currentTab.Content as Grid;
+                var closeButton = grid?.Children.OfType<Button>().FirstOrDefault();
+
+                if (closeButton != null)
+                {
+                    int tabIndex = (int)closeButton.Tag;
+
+                    tabControl.Items.RemoveAt(tabIndex);
+
+                    var webBrowser = (currentTab.Content as Grid)?.Children.OfType<ChromiumWebBrowser>().FirstOrDefault();
+                    webBrowser?.Dispose();
+                    tabCounter--;
+
+                    for (int i = tabIndex; i < tabControl.Items.Count; i++)
+                    {
+                        var remainingTab = tabControl.Items[i] as TabItem;
+
+                        if (remainingTab != null)
+                        {
+                            var remainingGrid = remainingTab.Content as Grid;
+                            var remainingButton = remainingGrid?.Children.OfType<Button>().FirstOrDefault();
+
+                            if (remainingButton != null)
+                            {
+                                remainingButton.Tag = i;
+                                remainingTab.Header = i == 0 ? "Adam" : $"Tab {i}";
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        
         public MainWindow()
         {
             InitializeComponent();
             webView1.FrameLoadStart += WebView_FrameLoadStart;
             webView1.FrameLoadEnd += WebView_FrameLoadEnd;
             webView1.Address = "https://start.duckduckgo.com/";
+            PreviewKeyDown += MainWindow_PreviewKeyDown;
         }
 
         private void WebView_FrameLoadStart(object sender, FrameLoadStartEventArgs e)
@@ -65,8 +138,7 @@ namespace Cs_Browser
                 Background = Brushes.Transparent,
                 BorderBrush = Brushes.Transparent,
                 HorizontalAlignment = HorizontalAlignment.Right,
-                VerticalAlignment = VerticalAlignment.Top,
-                Visibility = Visibility.Visible
+                VerticalAlignment = VerticalAlignment.Top
             };
 
             closeButton.Click += CloseTabButton_Click;
@@ -83,6 +155,7 @@ namespace Cs_Browser
                 SearchButton_Click(sender, e);
             }
         }
+
 
         private void CloseTabButton_Click(object sender, RoutedEventArgs e)
         {

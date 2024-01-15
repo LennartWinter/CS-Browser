@@ -7,7 +7,8 @@
         xmlns:wpf="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525"
-        Background="#2C2C2C">
+        Background="#2C2C2C"
+        PreviewKeyDown="MainWindow_PreviewKeyDown">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
